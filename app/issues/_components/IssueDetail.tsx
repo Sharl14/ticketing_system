@@ -10,7 +10,7 @@ import {
 import { format } from "date-fns";
 import IssueEditButton from "./IssueEditButton";
 import IssueDeleteButton from "./IssueDeleteButton";
-import AssigneeSelect from "../[id]/AssigneeSelect";
+import AssigneeSelect from "../[...id]/AssigneeSelect";
 
 interface Issue {
   id: string;
