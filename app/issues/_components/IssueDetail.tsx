@@ -10,15 +10,15 @@ import {
 import { format } from "date-fns";
 import IssueEditButton from "./IssueEditButton";
 import IssueDeleteButton from "./IssueDeleteButton";
-import AssigneeSelect from "../[...id]/AssigneeSelect";
-
-interface Issue {
-  id: string;
-  title: string;
-  description: string;
-  status: string;
-  createdAt: Date | string;
-}
+import AssigneeSelect from "../[id]/AssigneeSelect";
+import { Issue } from "@/lib/generated/prisma";
+// interface Issue {
+//   id: string;
+//   title: string;
+//   description: string;
+//   status: string;
+//   createdAt: Date | string;
+// }
 
 export default function IssueDetail({ issue }: { issue: Issue }) {
   return (
@@ -31,7 +31,11 @@ export default function IssueDetail({ issue }: { issue: Issue }) {
               {issue.description}
             </CardDescription>
           </div>
-          <Badge variant={issue.status === "open" ? "default" : "destructive"}>
+          <Badge
+            variant={
+              (issue.status as string) === "open" ? "default" : "destructive"
+            }
+          >
             {issue.status.toUpperCase()}
           </Badge>
         </div>
@@ -42,7 +46,7 @@ export default function IssueDetail({ issue }: { issue: Issue }) {
           Created At: {format(new Date(issue.createdAt), "MMMM d, yyyy HH:mm")}
         </p>
         <div className="flex gap-4">
-          <AssigneeSelect />
+          <AssigneeSelect issue={issue} />
           <IssueEditButton issueId={issue.id} />
           <IssueDeleteButton issueId={issue.id} />
         </div>
