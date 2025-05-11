@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-
 import {
   Card,
   CardContent,
@@ -11,14 +10,8 @@ import { format } from "date-fns";
 import IssueEditButton from "./IssueEditButton";
 import IssueDeleteButton from "./IssueDeleteButton";
 import AssigneeSelect from "../[id]/AssigneeSelect";
+import TicketStatusSelect from "./TicketStatusSelect";
 import { Issue } from "@/lib/generated/prisma";
-// interface Issue {
-//   id: string;
-//   title: string;
-//   description: string;
-//   status: string;
-//   createdAt: Date | string;
-// }
 
 export default function IssueDetail({ issue }: { issue: Issue }) {
   return (
@@ -40,19 +33,18 @@ export default function IssueDetail({ issue }: { issue: Issue }) {
           </Badge>
         </div>
       </CardHeader>
-
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
           Created At: {format(new Date(issue.createdAt), "MMMM d, yyyy HH:mm")}
         </p>
         <div className="flex gap-4">
           <AssigneeSelect issue={issue} />
+          <TicketStatusSelect ticketId={issue.id} />
           <IssueEditButton issueId={issue.id} />
           <IssueDeleteButton issueId={issue.id} />
         </div>
       </CardContent>
+        
     </Card>
   );
 }
-
-// localhost:3000/issues/id/edit
