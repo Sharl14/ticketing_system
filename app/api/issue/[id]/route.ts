@@ -19,6 +19,7 @@ const formSchema = z.object({
     .max(200)
     .optional()
     .nullable(),
+  status: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"]).optional(),
 });
 
 export async function PATCH(
@@ -37,7 +38,8 @@ export async function PATCH(
     return NextResponse.json({ error: "Validation failed" }, { status: 400 });
   }
 
-  const { title, description, userId } = body;
+  // const { title, description, userId } = body;
+  const { title, description, userId, status } = validation.data;
   if (userId) {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
@@ -51,76 +53,9 @@ export async function PATCH(
       title,
       description,
       userId,
+      status,
     },
   });
 
   return NextResponse.json({ response }, { status: 202 });
-}
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
-
-  const issue = await prisma.issue.findUnique({ where: { id } });
-  if (!issue) {
-    return NextResponse.json({ error: "No issue found" }, { status: 404 });
-  }
-
-  await prisma.issue.delete({
-    where: { id },
-  });
-
-  return NextResponse.json({ success: "Issue is deleted" }, { status: 202 });
-}
-
-export async function UPDATE_ISSUE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
-
-  // Check if the issue exists
-  const issue = await prisma.issue.findUnique({ where: { id } });
-  if (!issue) {
-    return NextResponse.json({ error: "No issue found" }, { status: 400 });
-  }
-
-  // Parse and validate the request body
-  const body = await request.json();
-  const validation = z
-    .object({
-      status: z.string().min(1).max(50).optional(),
-    })
-    .safeParse(body);
-
-  if (!validation.success) {
-    return NextResponse.json({ error: "Validation failed" }, { status: 400 });
-  }
-
-  const { status } = body;
-
-  // Update the issue if a valid status is provided
-  if (status) {
-    try {
-      const updatedIssue = await prisma.issue.update({
-        where: { id },
-        data: { status },
-      });
-      return NextResponse.json({ updatedIssue }, { status: 202 });
-    } catch (error) {
-      console.error("Error updating issue:", error);
-      return NextResponse.json(
-        { error: "Failed to update issue" },
-        { status: 500 }
-      );
-    }
-  }
-
-  // Fallback response if no valid fields are provided
-  return NextResponse.json(
-    { error: "No valid fields to update" },
-    { status: 400 }
-  );
 }
