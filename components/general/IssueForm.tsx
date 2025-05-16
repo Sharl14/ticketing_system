@@ -24,7 +24,15 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Issue } from "@/lib/generated/prisma";
+
+// Use a local type definition for Issue to avoid importing from Prisma
+// This ensures the client component does not depend on server-only code
+type Issue = {
+  id: string;
+  title: string;
+  description: string;
+  // add other fields you use in this component
+};
 
 const formSchema = z.object({
   title: z

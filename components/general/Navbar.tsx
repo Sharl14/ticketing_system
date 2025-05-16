@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Bug } from "lucide-react";
 import { usePathname } from "next/navigation";
 import SignOut from "../auth/sign-out";
+import ThemeToggle from "../ThemeToggle";
+
 const Navbar = () => {
   const currentPath = usePathname();
   const links = [
@@ -35,8 +37,9 @@ const Navbar = () => {
           ))}
         </ul>
       </div>
-      <div>
+      <div className="flex items-center gap-4">
         <SignOut />
+        <ThemeToggle />
       </div>
     </nav>
   );

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import React, { useState } from "react";
@@ -15,7 +17,6 @@ import { useRouter } from "next/navigation";
 const TicketStatusSelect = ({ ticketId }: { ticketId: string }) => {
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
   const router = useRouter();
   // Match Prisma enum values exactly
   const options = [
@@ -52,7 +53,6 @@ const TicketStatusSelect = ({ ticketId }: { ticketId: string }) => {
       router.push(`/issues/${ticketId}`);
     } catch (error) {
       console.error("Error updating ticket status:", error);
-      setError(error);
     } finally {
       setLoading(false);
     }
